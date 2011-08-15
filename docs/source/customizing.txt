@@ -1,0 +1,201 @@
+================================================================================
+Wie nehme ich Anpassungen an Plone vor
+================================================================================
+
+Templates through-the-Web überschreiben
+================================================================================
+
+- Gehe ins Zope Management Interface (ZMI): http://localhost:8080/manage_main
+- portal_view_customizations
+
+Nachteile
+---------
+
+- Templates werden in der ZODB gespeichert
+- Schlechter Editor
+- Können verloren gehen
+- Nicht dokumentiert
+- Nicht im SVN
+
+
+Erstellung eines Policy-Produkts für Anpassungen
+================================================================================
+
+Create egg::
+
+  $ paster create -t plone froscon.policy 
+  # Create Profile => True
+
+Generic Setup Profil erstellen::
+
+  $ cd froscon.policy/froscon/policy
+  $ mkdir -p profiles/default
+
+Abhängigkeiten definieren:
+
+setup.py::
+
+  install_requires=[
+      'setuptools',
+      # -*- Extra requirements: -*-
+      'plone.app.discussion',
+      ],
+
+
+Abhängigkeiten sollen automatisch installiert werden, wenn das Policy Produkt im Plone Quickinstaller
+installiert wird.
+
+profiles/default/metadata.xml::
+
+  <metadata>
+   <version>1</version>
+   <dependencies>
+    <dependency>profile-Products.PloneFormGen:default</dependency>
+    <dependency>profile-collective.sharerizer:default</dependency>
+    <dependency>profile-qi.portlet.TagClouds:default</dependency>
+   </dependencies>
+  </metadata>
+
+
+Plone Templates mit z3c.jbot überschreiben
+================================================================================
+
+Vorbereitungen
+--------------
+
+Omelette installieren.
+
+buildout.cfg::
+
+  [buildout]
+  parts =
+      ...
+      omelette
+
+  [omelette]
+  recipe = collective.recipe.omelette
+  eggs = ${instance:eggs}
+
+
+  
+Wie finde ich die Templates die ich überschreiben möchte?
+---------------------------------------------------------
+
+URL: http://localhost:8080/Plone/contact-info::
+
+  $ find . -name contact-info
+
+HTML Template::
+
+  $ grep -R . feedback_form
+
+
+z3c.jbot installieren
+---------------------
+
+setup.py::
+
+  install_requires=[
+      'setuptools',
+      # -*- Extra requirements: -*-
+      'z3c.jbot',
+  ],
+
+configure.zcml::
+
+  <include package="z3c.jbot" file="meta.zcml" />
+
+  <browser:jbot
+      directory="overrides"
+      layer="<layer>" />
+
+
+Verzeichnis für Templates erstellen::
+
+  $ mkdir overrides
+
+Plone Template in das neu erstellte Templates-Verzeichnis kopieren:
+  
+  $ cp parts/omelette/plone/app/layout/viewlets/document_byline.pt froscon.policy/froscon/policy/overrides
+
+
+Beispiele
+---------
+
+  * plone.app.layout.viewlets.document_byline.pt
+  * plone.app.layout.viewlets.sections.pt
+  * plone.app.portlets.portlets.navigation.pt
+
+http://www.plone-entwicklerhandbuch.de/plone-entwicklerhandbuch/anhang/praxisbeispiele/z3c.jbot
+
+
+Python Code mit collective.monkeypatcher überschreiben
+================================================================================
+
+  * Letzte Möglichkeit
+  * Besser: Zope Component Architecture
+
+
+Installation
+------------
+
+buildout.cfg::
+
+  [instance]
+  eggs =
+     collective.monkeypatcher
+  zcml =
+     collective.monkeypatcher
+
+
+configure.zcml::
+
+  <configure
+      xmlns:monkey="http://namespaces.plone.org/monkey">
+
+      <include package="collective.monkeypatcher" />
+
+      <monkey:patch
+          description="This allows Catalog Tool to find comments
+                       during clear-and-rebuild catalog"
+          class="Products.CMFPlone.CatalogTool.CatalogTool"
+          original="clearFindAndRebuild"
+          replacement=".patches.patchedClearFindAndRebuild"
+          />
+
+  </configure>
+
+
+patches.py::
+
+  def patchedClearFindAndRebuild(self):
+          """Empties catalog, then finds all contentish objects (i.e. objects
+             with an indexObject method), and reindexes them.
+             This may take a long time.
+          """
+          ...
+
+
+Übersetzungen überschreiben
+================================================================================
+
+Installation
+------------
+
+configure.zcml::
+
+  <i18n:registerTranslations directory="locales"/>
+
+Create directories::
+
+  $ mkdir -p locales/de/LC_MESSAGES
+
+Plone .po Datei kopieren und verändern::
+
+  $ cp ../parts/omelette/plone/app/locales/de/LC_MESSAGES/plone.po locales/de/LC_MESSAGES
+
+Zusatzprodukt .po Datei kopieren und verändern::
+
+  $ cp ../parts/omelette/Products.EasyNewsletter/EasyNewsletter.po locales/de/LC_MESSAGES
+
+http://plone-regional-forums.221720.n2.nabble.com/plone4-how-to-override-translations-in-plone-app-locales-td5456430.html

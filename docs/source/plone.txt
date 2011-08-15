@@ -1,0 +1,182 @@
+================================================================================
+Plone
+================================================================================
+
+Plone installieren
+================================================================================
+
+Zwei Wege
+---------
+
+Es gibt zwei verschiedene Wege zur Installation von Plone:
+
+  - Unified Installer (Linux, Mac OS X, Windows)
+  - Buildout
+
+
+Unified Installer
+-----------------
+
+http://plone.org/products/plone/releases
+
+
+Buildout
+--------
+
+Vorbereitungen:
+
+Python 2.6::
+
+  $ apt-get install -y python2.6 python2.6-dev python2.6-imaging
+
+Distribute::
+
+  $ wget http://python-distribute.org/distribute_setup.py
+  $ sudo python2.6 distribute_setup.py
+
+  $ wget https://github.com/pypa/pip/raw/master/contrib/get-pip.py
+  $ sudo python2.6 get-pip.py
+
+ZopeSkel::
+
+  $ sudo pip install --upgrade ZopeSkel
+
+
+Buildout
+================================================================================
+
+Erstellung eines Plone 4 Buildouts::
+
+  $ paster create -t plone4_buildout plone4froscon
+  Plone Version (Plone version # to install) ['4.0.5']: 4.1
+
+Buildout Struktur::
+
+  project/
+     bootstrap.py  †
+     buildout.cfg  †
+     .installed.cfg
+     parts/
+     develop-eggs/
+     bin/
+         buildout
+     eggs/
+     downloads/
+
+† Diese Dateien kommen ins Versionscontrollsystem
+
+http://www.buildout.org/docs/dirstruct.html
+
+
+buildout.cfg::
+
+  [buildout]
+  parts =  
+      instance
+
+  extends = 
+      http://dist.plone.org/release/4.1/versions.cfg
+    
+  find-links =
+      http://dist.plone.org/release/4.1
+      http://dist.plone.org/thirdparty
+
+  extensions = 
+      mr.developer
+      buildout.dumppickedversions
+
+  sources = sources
+    
+  versions = versions
+
+  [instance]
+  recipe = plone.recipe.zope2instance
+  user = admin:admin
+  http-address = 8080
+  debug-mode = off
+  verbose-security = on
+  blob-storage = var/blobstorage
+
+  eggs =
+      PIL
+      Plone
+
+Erstellung einer Plone Instanz::
+
+  $ python2.6 bootstrap.py
+  $ bin/buildout
+  $ bin/instance fg
+
+
+Installation von Zusatzprodukten
+================================================================================
+
+http://plone.org/products
+
+buildout.cfg::
+
+  [instance]
+  eggs = Products.PloneFormGen
+
+Buildout nochmals laufen lassen::
+
+  $ bin/buildout
+
+Instanz starten::
+
+  $ bin/instance fg
+
+
+Versionen Pinnen
+----------------
+
+buildout.cfg::
+
+  [instance]
+  eggs = Products.PloneFormGen
+
+  [versions]
+  Products.PloneFormGen = 1.6.5
+
+
+Gepinnte Versionen
+------------------
+
+buildout.cfg::
+
+  [buildout]
+  extensions = buildout.dumppickedversions
+  dump-picked-versions-file = versions.cfg
+  overwrite-picked-versions-file = false
+
+http://pypi.python.org/pypi/buildout.dumppickedversions
+
+
+Dexterity
+---------
+
+buildout.cfg::
+
+  [buildout]
+  extends = http://good-py.appspot.com/release/dexterity/1.0-next?plone=4.1
+
+  [instance]
+  eggs = 
+      plone.app.dexterity
+      ...
+
+
+plone.app.theming
+-----------------
+
+buildout.cfg::
+
+  [buildout]
+  extends = http://good-py.appspot.com/release/plone.app.theming/1.0b1?plone=4.1
+
+  [instance]
+  eggs =
+      plone.app.theming
+      ...
+
+

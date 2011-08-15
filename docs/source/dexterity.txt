@@ -1,0 +1,57 @@
+================================================================================
+Entwicklung von Typen mit Dexterity
+================================================================================
+
+Was ist Dexterity
+================================================================================
+
+- Neues Content-Types-Framework für Plone (ab 3.3)
+
+Design Prinzipien
+-----------------
+
+- Dexterity will einige Dinge sehr einfach machen:
+
+    * Erstellung von Inhaltstypen through-the-web one Programmierungserfahrung.
+    * Business-User sollen through-the-web oder mit visuellen Tools ein Grundschema erstellen, das
+      von Python-Programmierern mit Adaptern, Event Handlern und anderen Python-Code versehen werden können
+    * Schnelle Entwicklung von Inhaltstypen im Dateisystem, ohne die Möglichkeit zu verlieren Änderungen
+      an den Inhaltstypen vorzunehmen
+    * Unterstützung von generalisierten "Behaviors", die für deklarativ für Inhaltstypen eingeschaltet werden können.
+    * Einfache Zusammenstellung und Verteilung von Inhaltstypen TTW und/oder im Dateisystem.
+
+Philosophie
+-----------
+
+    * Reuse over reinvention: Baue auf existierenden Technologie auf; benutze bestehende APIs
+    * Small over big
+    * Natural interaction over excessive generality
+    * Real code over generated code
+    * Zope 3 over Zope 2
+    * Zope concepts over new paradigms
+    * Automated testing over wishful thinking
+
+
+Einfache Erstellung von Dexterity Typen through-the-web
+================================================================================
+
+
+Dexterity Typen im Dateisystem entwickeln
+================================================================================
+
+    $ cd src
+    $ paster create -t dexterity froscon.dexterity
+
+Behaviors
+================================================================================
+
+
+Dexerity Helpers
+================================================================================
+
+    * http://pypi.python.org/pypi/collective.dexteritytextindexer
+
+Further reading
+================================================================================
+
+http://pypi.python.org/pypi/plone.app.dexterity
