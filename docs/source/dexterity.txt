@@ -5,25 +5,30 @@ Entwicklung von Typen mit Dexterity
 Was ist Dexterity
 ================================================================================
 
-- Neues Content-Types-Framework für Plone (ab 3.3)
+    * Dexterity ist ein neues Framework für Inhaltstypen in Plone (ab 3.3)
+    * Archetypes-Nachfolger
 
 Design Prinzipien
 -----------------
 
 - Dexterity will einige Dinge sehr einfach machen:
 
-    * Erstellung von Inhaltstypen through-the-web one Programmierungserfahrung.
-    * Business-User sollen through-the-web oder mit visuellen Tools ein Grundschema erstellen, das
-      von Python-Programmierern mit Adaptern, Event Handlern und anderen Python-Code versehen werden können
-    * Schnelle Entwicklung von Inhaltstypen im Dateisystem, ohne die Möglichkeit zu verlieren Änderungen
-      an den Inhaltstypen vorzunehmen
-    * Unterstützung von generalisierten "Behaviors", die für deklarativ für Inhaltstypen eingeschaltet werden können.
-    * Einfache Zusammenstellung und Verteilung von Inhaltstypen TTW und/oder im Dateisystem.
+    * Erstellung von Inhaltstypen through-the-web ohne Programmierungserfahrung.
+    * Business-User sollen through-the-web oder mit visuellen Tools ein 
+      Grundschema erstellen, dass von Python-Programmierern mit Adaptern, 
+      Events, Handlern und anderen Python-Code versehen werden können.
+    * Schnelle Entwicklung von Inhaltstypen im Dateisystem, ohne die Möglichkeit
+      zu verlieren Änderungen through-the-web vorzunehmen.
+    * Unterstützung von generalisierten "Behaviors", die deklarativ für einzelne
+      Inhaltstypen ein- und ausgeschaltet werden können.
+    * Einfache Erstellung und Distribution von Inhaltstypen TTW und/oder im
+      Dateisystem.
 
 Philosophie
 -----------
 
-    * Reuse over reinvention: Baue auf existierenden Technologie auf; benutze bestehende APIs
+    * Reuse over reinvention: Baue auf existierenden Technologie auf; benutze 
+      bestehende APIs
     * Small over big
     * Natural interaction over excessive generality
     * Real code over generated code
@@ -35,15 +40,170 @@ Philosophie
 Einfache Erstellung von Dexterity Typen through-the-web
 ================================================================================
 
+Dexterity aktivieren
+--------------------
+
+.. image:: _images/dexterity_install.png
+
+Dexerity Control Panel
+----------------------
+
+.. image:: _images/dexterity_control_panel.png
+
+Neuen Typen hinzufügen
+----------------------
+
+.. image:: _images/dexterity_add_referent.png
+
+
+Dexterity Typen exportieren
+---------------------------
+
+.. image:: _images/dexterity_add_referent.png
+
 
 Dexterity Typen im Dateisystem entwickeln
 ================================================================================
 
+Plone Zusatzprodukt erstellen::
+
     $ cd src
-    $ paster create -t dexterity froscon.dexterity
+    $ paster create -t plone froscon.contenttypes
+      Register Profile (Should this package register a GS Profile) [False]: True
+      ...
+
+Dexterity Paket registrieren
+---------------------------
+
+buildout.cfg::
+
+    [buildout]
+    extensions = buildout.eggtractor
+    tractor-src-directory = src
+
+Dexterity Abhängigkeit definieren
+---------------------------------
+
+setup.py::
+
+    install_requires=[
+        'setuptools',
+        'Plone',
+        'plone.app.dexterity',
+        'collective.autopermission',
+    ],
+
+profiles/default/metadata.xml::
+
+    <metadata>
+        <version>1</version>
+        <dependencies>
+            <dependency>profile-plone.app.dexterity:default</dependency>
+        </dependencies>
+    </metadata>
+
+
+Generic Setup Profil erstellen
+------------------------------
+
+Generic Setup Profile erstellen::
+
+    $ cd src/froscon.contenttypes/froscon/contenttypes/profiles/default
+    $ unzip dexterity_export-20110815104507.zip
+
+types.xml::
+
+    <?xml version="1.0"?>
+    <object meta_type="Plone Types Tool" name="portal_types">
+     <property name="title">Controls the available content types in your portal</property>
+     <object meta_type="Dexterity FTI" name="referent" />
+     <!-- -*- extra stuff goes here -*- -->
+    </object>
+
+types/referent.xml::
+
+    <?xml version="1.0"?>
+    <object name="referent" meta_type="Dexterity FTI"
+       xmlns:i18n="http://xml.zope.org/namespaces/i18n">
+     <property name="title">Referent</property>
+     <property name="description">None</property>
+     <property name="icon_expr">string:${portal_url}/folder_icon.png</property>
+     <property name="factory">referent</property>
+     <property name="link_target"></property>
+     <property name="immediate_view">view</property>
+     <property name="global_allow">True</property>
+     <property name="filter_content_types">False</property>
+     <property name="allowed_content_types"/>
+     <property name="allow_discussion">False</property>
+     <property name="default_view">view</property>
+     <property name="view_methods">
+      <element value="view"/>
+     </property>
+     <property name="default_view_fallback">False</property>
+     <property name="add_permission">cmf.AddPortalContent</property>
+     <property name="klass">plone.dexterity.content.Container</property>
+     <property name="behaviors">
+      <element value="plone.app.dexterity.behaviors.metadata.IDublinCore"/>
+      <element value="plone.app.content.interfaces.INameFromTitle"/>
+     </property>
+     <property name="schema"></property>
+     <property name="model_source">
+      &lt;model xmlns="http://namespaces.plone.org/supermodel/schema"&gt;
+          &lt;schema&gt;
+          &lt;/schema&gt;
+      &lt;/model&gt;</property>
+     <property name="model_file"></property>
+     <alias from="(Default)" to="(dynamic view)"/>
+     <alias from="edit" to="@@edit"/>
+     <alias from="sharing" to="@@sharing"/>
+     <alias from="view" to="(selected layout)"/>
+     <action title="View" action_id="view" category="object" condition_expr=""
+        icon_expr="" link_target="" url_expr="string:${object_url}"
+        visible="True">
+      <permission value="View"/>
+     </action>
+     <action title="Edit" action_id="edit" category="object" condition_expr=""
+        icon_expr="" link_target="" url_expr="string:${object_url}/edit"
+        visible="True">
+      <permission value="Modify portal content"/>
+     </action>
+    </object>
+
+Restart instance
+
+Installiere das neu erstellte Paket:
+
+.. image:: _images/dexterity_install_contenttypes.png
+
+Ändere Icon:
+
+types/referent.xml::
+
+    <?xml version="1.0"?>
+    <object name="referent" meta_type="Dexterity FTI"
+       xmlns:i18n="http://xml.zope.org/namespaces/i18n">
+     <property name="title">Referent</property>
+     <property name="description">None</property>
+     <property name="icon_expr">string:${portal_url}/user.png</property>
+     ...
+    </object>
+
+Restart instance
+
+.. image:: _images/dexterity_add_menu.png
+
+Reinstall froscon.contenttypes:
+
+.. image:: _images/dexterity_add_menu_neu.png
+
 
 Behaviors
 ================================================================================
+
+Behaviors sind wiederverwendbare Teile/Aspekte welche Semantik oder 
+Schema-Felder für Inhaltstypen zur Verfügung stellen.
+
+.. image:: _images/dexterity_behaviors.png
 
 
 Dexerity Helpers
@@ -54,4 +214,5 @@ Dexerity Helpers
 Further reading
 ================================================================================
 
-http://pypi.python.org/pypi/plone.app.dexterity
+    * http://pypi.python.org/pypi/plone.app.dexterity
+    * http://plone.org/products/dexterity/documentation/manual/developer-manual

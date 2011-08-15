@@ -34,29 +34,34 @@ Nachteile
 Erstellung eines Policy-Produkts für Anpassungen
 ================================================================================
 
-Create egg::
+Python Paket erstellen
+----------------------
+
+Python Paket mit Paster/ZopeSkel erstellen::
 
   $ paster create -t plone froscon.policy 
   # Create Profile => True
 
-Generic Setup Profil erstellen::
-
-  $ cd froscon.policy/froscon/policy
-  $ mkdir -p profiles/default
-
-Abhängigkeiten definieren:
+Paket-Abhängigkeiten definieren:
 
 setup.py::
 
   install_requires=[
       'setuptools',
       # -*- Extra requirements: -*-
-      'plone.app.discussion',
+      'Products.PloneFormGen',
       ],
 
+Generic Setup
+-------------
 
 Abhängigkeiten sollen automatisch installiert werden, wenn das Policy Produkt im Plone Quickinstaller
 installiert wird.
+
+*Generic Setup* Profil erstellen::
+
+  $ cd froscon.policy/froscon/policy
+  $ mkdir -p profiles/default
 
 profiles/default/metadata.xml::
 
@@ -64,8 +69,6 @@ profiles/default/metadata.xml::
    <version>1</version>
    <dependencies>
     <dependency>profile-Products.PloneFormGen:default</dependency>
-    <dependency>profile-collective.sharerizer:default</dependency>
-    <dependency>profile-qi.portlet.TagClouds:default</dependency>
    </dependencies>
   </metadata>
 
@@ -73,10 +76,8 @@ profiles/default/metadata.xml::
 Plone Templates mit z3c.jbot überschreiben
 ================================================================================
 
-Vorbereitungen
---------------
-
-Omelette installieren.
+Omelette installieren
+---------------------
 
 buildout.cfg::
 
@@ -90,17 +91,19 @@ buildout.cfg::
   eggs = ${instance:eggs}
 
 
-  
 Wie finde ich die Templates die ich überschreiben möchte?
 ---------------------------------------------------------
 
-URL: http://localhost:8080/Plone/contact-info::
+String in der URL: http://localhost:8080/Plone/contact-info::
 
-  $ find . -name contact-info
+  $ find parts/omelette/ -name contact-info
 
-HTML Template::
+String in der HTML-Ausgabe::
 
-  $ grep -R . feedback_form
+  $ grep -R feedback_form parts/omelette
+  ...
+  **parts/omelette/Products/CMFPlone/skins/plone_templates/contact-info.cpt:**
+  <form name="feedback_form"
 
 
 z3c.jbot installieren
@@ -145,7 +148,8 @@ http://www.plone-entwicklerhandbuch.de/plone-entwicklerhandbuch/anhang/praxisbei
 Python Code mit collective.monkeypatcher überschreiben
 ================================================================================
 
-  * Letzte Möglichkeit
+  * Keine saubere Lösung
+  * Letzte Möglichkeit wenn man keine andere Wahl hat
   * Besser: Zope Component Architecture
 
 
