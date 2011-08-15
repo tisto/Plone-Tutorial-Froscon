@@ -47,7 +47,7 @@ Buildout
 
 Erstellung eines Plone 4 Buildouts::
 
-  $ paster create -t plone4_buildout plone4froscon
+  $ paster create -t plone4_buildout plone-tutorial
   Plone Version (Plone version # to install) ['4.0.5']: 4.1
 
 Buildout Struktur::

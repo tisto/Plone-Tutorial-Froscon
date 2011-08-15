@@ -5,17 +5,30 @@ Wie nehme ich Anpassungen an Plone vor
 Templates through-the-Web überschreiben
 ================================================================================
 
-- Gehe ins Zope Management Interface (ZMI): http://localhost:8080/manage_main
-- portal_view_customizations
+Gehe ins Zope Management Interface (http://localhost:8080/Plone/manage_main) und klicke wähle "portal_view_customizations".
+
+.. image:: _images/zmi_portal_view_customizations.png
+
+Wähle dort logo.png zum Überschreiben aus:
+
+.. image:: _images/zmi_portal_view_customizations_logo.png
+
+Überschreibe das Logo-Template mit eigenem Code:
+
+.. image:: _images/zmi_portal_view_customizations_logo_override.png
+
+Ergebnis:
+
+.. image:: _images/zmi_portal_view_customizations_logo_customized.png
 
 Nachteile
 ---------
 
-- Templates werden in der ZODB gespeichert
+- Templates werden in der Objektdatenbank (ZODB) gespeichert
 - Schlechter Editor
-- Können verloren gehen
-- Nicht dokumentiert
-- Nicht im SVN
+- Templates können verloren gehen
+- Nicht sauber dokumentiert
+- Nicht im Versionskontrollsystem
 
 
 Erstellung eines Policy-Produkts für Anpassungen
