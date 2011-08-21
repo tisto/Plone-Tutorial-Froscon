@@ -7,7 +7,7 @@
         tal:condition="python:lock_icon">
       <img tal:replace="structure lock_icon" />
   </span>
-  <h1>hi froscon</h1>
+
   <tal:creator tal:define="creator_short_form view/creator;"
                tal:condition="creator_short_form">
   <tal:name tal:define="creator_long_form string:?author=${creator_short_form};
