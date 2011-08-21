@@ -12,7 +12,7 @@
 /*.egg-info
 /.installed.cfg
 /.mr.developer.cfg
-/*.pyc
+*.pyc
 /.Python
 /include
 /lib
