@@ -1,0 +1,4 @@
+<layers>
+ <layer name="froscon.policy"
+        interface="froscon.policy.interfaces.IFrosconPolicyLayer" />
+</layers>

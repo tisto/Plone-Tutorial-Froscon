@@ -1,3 +1,4 @@
 setuptools
 Products.CMFPlone
 Products.PloneFormGen
+z3c.jbot

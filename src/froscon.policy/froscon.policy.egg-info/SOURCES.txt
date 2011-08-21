@@ -12,4 +12,5 @@ froscon.policy.egg-info/paster_plugins.txt
 froscon.policy.egg-info/requires.txt
 froscon.policy.egg-info/top_level.txt
 froscon/policy/__init__.py
+froscon/policy/interfaces.py
 froscon/policy/tests.py

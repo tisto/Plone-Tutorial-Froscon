@@ -27,6 +27,7 @@ setup(name='froscon.policy',
           'setuptools',
           'Products.CMFPlone',
           'Products.PloneFormGen',
+          'z3c.jbot',
       ],
       entry_points="""
       # -*- Entry points: -*-

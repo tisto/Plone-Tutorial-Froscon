@@ -53,6 +53,7 @@ setup.py::
       'Products.PloneFormGen',
       ],
 
+
 Generic Setup
 -------------
 
@@ -117,16 +118,37 @@ setup.py::
       'z3c.jbot',
   ],
 
-configure.zcml::
-
-  <include package="z3c.jbot" file="meta.zcml" />
-
-  <browser:jbot
-      directory="overrides"
-      layer="<layer>" />
-
 interfaces.py::
 
+  from zope import interface
+
+  class IFrosconPolicyLayer(interface.Interface):
+      """Marker interface for browser layer
+      """
+
+profiles/default/browserlayer.xml::
+
+  <layers>
+   <layer name="froscon.policy"
+          interface="freitag.policy.interfaces.IFrosconPolicyLayer" />
+  </layers>
+
+configure.zcml::
+
+  <configure
+      ...
+      xmlns:browser="http://namespaces.zope.org/browser"
+      i18n_domain="froscon.policy">
+
+    ...
+
+    <include package="z3c.jbot" file="meta.zcml" />
+
+    <browser:jbot
+        directory="overrides"
+        layer="freitag.policy.interfaces.IFrosconPolicyLayer" />
+
+  </configure>
 
 
 Verzeichnis für Templates erstellen::
@@ -135,7 +157,12 @@ Verzeichnis für Templates erstellen::
 
 Plone Template in das neu erstellte Templates-Verzeichnis kopieren:
   
-  $ cp parts/omelette/plone/app/layout/viewlets/document_byline.pt froscon.policy/froscon/policy/overrides
+  $ cp parts/omelette/plone/app/layout/viewlets/document_byline.pt src/froscon.policy/froscon/policy/overrides/plone.app.layout.viewlets.document_byline.pt
+
+Buildout laufen lassen und Instanz starten::
+
+  $ ./bin/buildout
+  $ ./bin/instance fg
 
 
 Beispiele
