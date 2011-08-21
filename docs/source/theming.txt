@@ -1,0 +1,152 @@
+================================================================================
+Plone Theme Entwicklung
+================================================================================
+
+Theme Produkt erstellen::
+
+    $ paster create -t plone plonetheme.froscon
+    Register Profile [True]
+
+plone.app.theming als Abhängigkeit definieren.
+
+setup.py::
+
+    install_requires=[
+        'setuptools',
+        'plone.app.theming',
+    ],
+
+Theme Verzeichnis registrieren.
+
+plonetheme.froscon/configure.zcml::
+
+    <configure
+        xmlns="http://namespaces.zope.org/zope"
+        xmlns:five="http://namespaces.zope.org/five"
+        xmlns:i18n="http://namespaces.zope.org/i18n"
+        xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+        xmlns:plone="http://namespaces.plone.org/plone
+        i18n_domain="plonetheme.froscon">
+
+      <five:registerPackage package="." initialize=".initialize" />
+
+      <genericsetup:registerProfile
+          name="default"
+          title="plonetheme.froscon"
+          directory="profiles/default"
+          description="Installs the plonetheme.froscon package"
+          provides="Products.GenericSetup.interfaces.EXTENSION"
+          />
+     
+      <plone:static
+          type="theme" directory="static" />
+     
+    </configure>
+
+Generic Setup Profil erstellen::
+
+    $ mkdir -p profiles/default
+
+profiles/default/metadata.xml::
+
+    <metadata>
+        <version>1</version>
+        <dependencies>
+            <dependency>profile-plone.app.theming:default</dependency>
+        </dependencies>
+    </metadata>
+
+profiles/default/theme.xml::
+
+    <theme>
+        <name>plonetheme.froscon</name>
+        <enabled>true</enabled>
+    </theme>
+
+profiles/default/registry.xml::
+
+    <registry>
+
+        <record interface="plone.app.theming.interfaces.IThemeSettings" field="theme">
+            <value>http://www.froscon.de/en/home/home.html</value>
+        </record>
+
+        <record interface="plone.app.theming.interfaces.IThemeSettings" field="absolute_prefix">
+            <value>http://www.froscon.org/</value>
+        </record>
+
+        <record interface="plone.app.theming.interfaces.IThemeSettings" field="readNetwork">
+            <value>true</value>
+        </record>
+
+    </registry>
+
+profiles/default/cssregistry.xml::
+
+    <?xml version="1.0"?>
+    <object name="portal_css">
+
+     <!-- Set conditions on stylesheets we don't want to pull in -->
+     <stylesheet
+         expression="not:request/HTTP_X_THEME_ENABLED | nothing"
+         id="public.css"
+         />
+
+     <!-- Add new stylesheets -->
+     <!-- Note: applyPrefix is not available in Plone < 4.0b3 -->
+
+     <stylesheet title="" authenticated="False" cacheable="True"
+        compression="safe" conditionalcomment="" cookable="True" enabled="on"
+        expression="request/HTTP_X_THEME_ENABLED | nothing"
+        id="++theme++plonetheme.froscon/css/styles.css" media="" rel="stylesheet"
+        rendering="link"
+        applyPrefix="True"
+        />
+
+    </object>
+
+Theme Static Verzeichnis
+------------------------
+
+Static Verzeichnis erstellen::
+
+    $ mkdir static
+
+static/manifest.cfg::
+
+    [theme]
+    title = Froscon Plone theme
+    description = A Plone theme for froscon.org
+
+static/rules.xml::
+
+    <?xml version="1.0" encoding="UTF-8"?>
+    <rules
+        xmlns="http://namespaces.plone.org/diazo"
+        xmlns:css="http://namespaces.plone.org/diazo/css"
+        xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+
+        <theme href="http://www.froscon.de/en/home/home.html" css:if-content="#visual-portal-wrapper" />
+        <replace css:content-children="#content" css:theme-children="#linksmitte-spalte" />
+
+        <!-- Do not apply theme for jquery tools popups -->
+        <notheme css:if-content="#document-base-edit" />
+
+        <before css:theme-children="body" css:content="#plone-cmsui-trigger" />
+
+    </rules>
+
+
+Lokales Theme::
+
+    * static/theme.html
+    * static/css/styles.css
+
+buildout.cfg::
+
+    [versions]
+    diazo = 1.0rc3
+ 
+Run Buildout::
+
+    $ bin/buildout
