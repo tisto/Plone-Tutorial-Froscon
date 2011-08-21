@@ -14,6 +14,7 @@ Contents:
    plone.txt
    customizing.txt
    dexterity.txt
+   theming.txt
 
 
 

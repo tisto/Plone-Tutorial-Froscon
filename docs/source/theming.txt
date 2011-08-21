@@ -43,6 +43,10 @@ plonetheme.froscon/configure.zcml::
      
     </configure>
 
+
+Generic Setup
+=============
+
 Generic Setup Profil erstellen::
 
     $ mkdir -p profiles/default

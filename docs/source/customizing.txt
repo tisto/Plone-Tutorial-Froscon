@@ -39,6 +39,7 @@ Python Paket erstellen
 
 Python Paket mit Paster/ZopeSkel erstellen::
 
+  $ cd src
   $ paster create -t plone froscon.policy 
   # Create Profile => True
 
@@ -60,8 +61,7 @@ installiert wird.
 
 *Generic Setup* Profil erstellen::
 
-  $ cd froscon.policy/froscon/policy
-  $ mkdir -p profiles/default
+  $ mkdir -p froscon.policy/froscon/policy/profiles/default
 
 profiles/default/metadata.xml::
 
@@ -125,6 +125,9 @@ configure.zcml::
       directory="overrides"
       layer="<layer>" />
 
+interfaces.py::
+
+
 
 Verzeichnis für Templates erstellen::
 
@@ -143,54 +146,6 @@ Beispiele
   * plone.app.portlets.portlets.navigation.pt
 
 http://www.plone-entwicklerhandbuch.de/plone-entwicklerhandbuch/anhang/praxisbeispiele/z3c.jbot
-
-
-Python Code mit collective.monkeypatcher überschreiben
-================================================================================
-
-  * Keine saubere Lösung
-  * Letzte Möglichkeit wenn man keine andere Wahl hat
-  * Besser: Zope Component Architecture
-
-
-Installation
-------------
-
-buildout.cfg::
-
-  [instance]
-  eggs =
-     collective.monkeypatcher
-  zcml =
-     collective.monkeypatcher
-
-
-configure.zcml::
-
-  <configure
-      xmlns:monkey="http://namespaces.plone.org/monkey">
-
-      <include package="collective.monkeypatcher" />
-
-      <monkey:patch
-          description="This allows Catalog Tool to find comments
-                       during clear-and-rebuild catalog"
-          class="Products.CMFPlone.CatalogTool.CatalogTool"
-          original="clearFindAndRebuild"
-          replacement=".patches.patchedClearFindAndRebuild"
-          />
-
-  </configure>
-
-
-patches.py::
-
-  def patchedClearFindAndRebuild(self):
-          """Empties catalog, then finds all contentish objects (i.e. objects
-             with an indexObject method), and reindexes them.
-             This may take a long time.
-          """
-          ...
 
 
 Übersetzungen überschreiben
