@@ -5,12 +5,13 @@ Plone
 Plone installieren
 ================================================================================
 
-Zwei Wege
+Drei Wege
 ---------
 
-Es gibt zwei verschiedene Wege zur Installation von Plone:
+Es gibt drei verschiedene Wege zur Installation von Plone:
 
-  - Unified Installer (Linux, Mac OS X, Windows)
+  - Unified Installer (Linux, Mac OS X, Window)
+  - Windows Installer (letzte Version 4.0.7)
   - Buildout
 
 
