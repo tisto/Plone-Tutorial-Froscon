@@ -6,6 +6,8 @@
 Plone Tutorial (Froscon 2011)
 =============================
 
+http://froscon.timostollenwerk.net
+
 Contents:
 
 .. toctree::
