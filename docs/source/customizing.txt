@@ -191,7 +191,7 @@ Create directories::
 
 Plone .po Datei kopieren und verändern::
 
-  $ cp ../parts/omelette/plone/app/locales/de/LC_MESSAGES/plone.po locales/de/LC_MESSAGES
+  $ cp ../parts/omelette/plone/app/locales/locales/de/LC_MESSAGES/plone.po locales/de/LC_MESSAGES
 
 Zusatzprodukt .po Datei kopieren und verändern::
 
