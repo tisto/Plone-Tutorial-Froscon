@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rules
+    xmlns="http://namespaces.plone.org/diazo"
+    xmlns:css="http://namespaces.plone.org/diazo/css"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+
+    <theme href="http://www.froscon.de/en/home/home.html" css:if-content="#visual-portal-wrapper" />
+    <replace css:content-children="#content" css:theme-children="#linksmitte-spalte" />
+
+    <!-- Do not apply theme for jquery tools popups -->
+    <notheme css:if-content="#document-base-edit" />
+
+    <before css:theme-children="body" css:content="#plone-cmsui-trigger" />
+
+</rules>
