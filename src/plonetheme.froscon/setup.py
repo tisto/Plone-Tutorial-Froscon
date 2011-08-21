@@ -26,6 +26,7 @@ setup(name='plonetheme.froscon',
       install_requires=[
           'setuptools',
           'plone.app.theming',
+          'plone.app.cmsui',
       ],
       entry_points="""
       # -*- Entry points: -*-
